@@ -1,19 +1,10 @@
 <?php
-require __DIR__ . '/../includes/db.php';
-require __DIR__ . '/../includes/functions.php';
+// Kein Datenbankzugriff nötig – vermeidet Fehler, falls DB nicht erreichbar
 
-// Einfacher Basic-Auth-Check (zusätzlich zu .htaccess)
-$validUser = 'admin';
-$validPass = 'neonnest123';
+require __DIR__ . '/../includes/admin-auth.php';
 
-if (!isset($_SERVER['PHP_AUTH_USER']) ||
-    $_SERVER['PHP_AUTH_USER'] !== $validUser ||
-    $_SERVER['PHP_AUTH_PW'] !== $validPass) {
-    header('WWW-Authenticate: Basic realm="NeonNest Admin"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'Unauthorized';
-    exit;
-}
+// Auth per Session oder Basic Header
+enforce_admin_auth();
 
 $pageTitle = 'Admin Dashboard';
 include __DIR__ . '/../includes/header.php';
@@ -23,6 +14,9 @@ include __DIR__ . '/../includes/header.php';
         <h1 class="section-title">Admin – NeonNest Designs</h1>
         <p class="section-subtitle">
             Verwalte Templates und Bestellungen im NeonNest Store.
+        </p>
+        <p class="section-subtitle" style="margin-top:0.5rem;">
+            Angemeldet als Admin. <a href="/admin/logout.php">Logout</a>
         </p>
 
         <div class="grid grid-2">

@@ -1,17 +1,10 @@
 <?php
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/functions.php';
+require __DIR__ . '/../includes/admin-auth.php';
 
-$validUser = 'admin';
-$validPass = 'neonnest123';
-if (!isset($_SERVER['PHP_AUTH_USER']) ||
-    $_SERVER['PHP_AUTH_USER'] !== $validUser ||
-    $_SERVER['PHP_AUTH_PW'] !== $validPass) {
-    header('WWW-Authenticate: Basic realm="NeonNest Admin"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'Unauthorized';
-    exit;
-}
+// Login über Session oder Basic Header
+enforce_admin_auth();
 
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
@@ -44,6 +37,9 @@ include __DIR__ . '/../includes/header.php';
         <h1 class="section-title">Bestellungen</h1>
         <p class="section-subtitle">
             Übersicht über alle Bestellungen und dazugehörige Templates.
+        </p>
+        <p class="section-subtitle" style="margin-top:0.5rem;">
+            Angemeldet als Admin. <a href="/admin/logout.php">Logout</a>
         </p>
 
         <?php if ($orderId === 0): ?>
